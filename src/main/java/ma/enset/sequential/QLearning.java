@@ -39,19 +39,21 @@ public class QLearning {
 
     public void run(){
         int it = 0;
-        resetState();
         int currentState;
         int nextState;
-
         while (it<EPOCH){
-            currentState = stateI*MAZE_SIZE + stateJ;
-            int act = chooseAction(0.4);
-            nextState = executeAction(act);
-            System.out.println(stateI + " " + stateJ + " " + maze[stateI][stateJ]);
-            int act1=chooseAction(0);
-            qTable[currentState][act]=qTable[currentState][act]+ALPHA *(maze[stateI][stateJ]*GAMMA*qTable[nextState][act1]-qTable[currentState][act]);
+            resetState();
+            while (!finished()){
+                currentState = stateI*MAZE_SIZE + stateJ;
+                int act = chooseAction(0.4);
+                nextState = executeAction(act);
+                //System.out.println(stateI + " " + stateJ + " " + maze[stateI][stateJ]);
+                int act1=chooseAction(0);
+                qTable[currentState][act]=qTable[currentState][act]+ALPHA *(maze[stateI][stateJ]*GAMMA*qTable[nextState][act1]-qTable[currentState][act]);
+            }
             it++;
         }
+        show();
     }
 
     public int chooseAction(double eps){
@@ -78,5 +80,18 @@ public class QLearning {
         return stateI*MAZE_SIZE + stateJ;
     }
 
+    private boolean finished(){
+        return maze[stateI][stateJ]==1;
+    }
+
+    private void show(){
+        for (double []row:qTable){
+            System.out.println("[");
+            for (double value:row){
+                System.out.println(value+",");
+            }
+            System.out.println("]");
+        }
+    }
 
 }
