@@ -45,18 +45,20 @@ public class QLearning {
 
         while (it<EPOCH){
             currentState = stateI*MAZE_SIZE + stateJ;
-            int act = chooseAction();
+            int act = chooseAction(0.4);
             nextState = executeAction(act);
             System.out.println(stateI + " " + stateJ + " " + maze[stateI][stateJ]);
+            int act1=chooseAction(0);
+            qTable[currentState][act]=qTable[currentState][act]+ALPHA *(maze[stateI][stateJ]*GAMMA*qTable[nextState][act1]-qTable[currentState][act]);
             it++;
         }
     }
 
-    public int chooseAction(){
+    public int chooseAction(double eps){
         Random random = new Random();
         double bestQ = 0;
         int act = 0;
-        if(random.nextDouble() < EPS){
+        if(random.nextDouble() < eps){
             act = random.nextInt(ACTION_SIZE);
         }else{
             int st = stateI*MAZE_SIZE + stateJ;
